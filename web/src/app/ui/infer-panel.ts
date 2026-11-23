@@ -45,8 +45,8 @@ import { groupClass, UiState } from './ui-state';
             <ol class="columns">
               @for (c of inf.result.columns; track $index) {
                 <li>
-                  <code class="mono">{{ c.pattern }}{{ c.optional ? '?' : '' }}</code>
-                  <span class="muted">{{ c.examples.join(' · ') }}</span>
+                  <code class="mono">{{ visible(c.pattern) }}{{ c.optional ? '?' : '' }}</code>
+                  <span class="muted mono">{{ c.examples.map(visible).join(' · ') }}</span>
                 </li>
               }
             </ol>
@@ -140,6 +140,9 @@ export class InferPanel {
     this.selection.set(null);
     this.name.set('');
   }
+
+  /** Spaces are the one thing you can't see in a list of patterns. */
+  protected readonly visible = (s: string) => s.replace(/ /g, '␣').replace(/\t/g, '⇥');
 
   protected opt(key: 'exactLengths' | 'enumerations' | 'anchored', value: boolean) {
     this.synth.inferOptions.update((o) => ({ ...o, [key]: value }));
