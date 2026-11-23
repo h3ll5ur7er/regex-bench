@@ -1,0 +1,35 @@
+name: regex-bench
+wikiRoot: docs
+wikiHome: Home.md
+taskRoot: tasks
+taskPrefix: RB
+statuses:
+  - backlog
+  - todo
+  - in-progress
+  - review
+  - done
+types:
+  - story
+  - feature
+  - architecture
+  - research
+  - bug
+  - chore
+fields:
+  - name: estimate
+    type: effort
+  - name: depends_on
+    type: tasks
+  - name: milestone
+    type: choice
+    options: [M0, M1, M2, M3]
+milestones:
+  - name: M0
+    title: Architecture
+  - name: M1
+    title: Proof of concept
+  - name: M2
+    title: Deployment
+  - name: M3
+    title: Advanced features
