@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>regex-bench · regex workbench that runs on your device</title>
+    <base href="/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Test, explain, visualise, debug and convert regular expressions for JavaScript, PCRE, Python, Java, .NET, Rust and Go. Runs entirely in your browser, offline." />
+    <!--
+      Nothing may be loaded from or sent to another origin (docs/Decisions/ADR-002-no-network.md).
+      'wasm-unsafe-eval' allows compiling the bundled WebAssembly modules; blob: images are rendered diagrams.
+    -->
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' blob: data:; font-src 'self'; connect-src 'self'; worker-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'"
+    />
+    <meta name="theme-color" content="#5b4dff" />
+    <link rel="icon" type="image/svg+xml" href="icons/icon.svg" />
+    <link rel="manifest" href="manifest.webmanifest" />
+  </head>
+  <body>
+    <app-root></app-root>
+    <noscript>regex-bench needs JavaScript. Everything runs on your device; nothing is sent anywhere.</noscript>
+  </body>
+</html>
