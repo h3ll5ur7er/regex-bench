@@ -167,7 +167,7 @@ export const TOOL_TABS: ToolTab[] = [
     .copy, .actions { position: absolute; top: 6px; right: 6px; }
     .actions { display: flex; gap: 6px; }
     .tests { display: grid; gap: 6px; }
-    .test { display: grid; grid-template-columns: 22px 170px minmax(120px, 1fr) minmax(0, 1fr) 32px; gap: 8px; align-items: center; }
+    .test { display: grid; grid-template-columns: 22px 196px minmax(120px, 1fr) minmax(0, 1fr) 32px; gap: 8px; align-items: center; }
     .badge { width: 22px; height: 22px; border-radius: 50%; display: grid; place-items: center; font-size: 12px; font-weight: 700; background: var(--surface-3); color: var(--text-3); }
     .pass .badge { background: var(--ok-soft); color: var(--ok); }
     .fail .badge, .error .badge { background: var(--err-soft); color: var(--err); }

@@ -43,9 +43,8 @@ export class LibraryManager {
     }, 3000);
   }
 
-  async createLink(state: SessionState, includeText: boolean): Promise<{ url: string; copied: boolean }> {
-    const url = await this.share.toLink(state, includeText);
-    return { url, copied: await this.host.copy(url) };
+  createLink(state: SessionState, includeText: boolean): Promise<string> {
+    return this.share.toLink(state, includeText);
   }
 
   saveToLibrary(name: string, state: SessionState) {

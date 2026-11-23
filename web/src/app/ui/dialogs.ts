@@ -36,8 +36,9 @@ export class ShareDialog {
   protected readonly url = signal('');
 
   protected async create() {
-    const { url, copied } = await this.lib.createLink(this.wb.state(), this.includeText());
+    const url = await this.lib.createLink(this.wb.state(), this.includeText());
     this.url.set(url);
+    const copied = await this.lib.copy(url);
     this.ui.notify(copied ? 'Link copied' : 'Select the link and copy it', copied ? 'ok' : 'error');
   }
 }

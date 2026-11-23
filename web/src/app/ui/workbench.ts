@@ -116,6 +116,13 @@ import { applyTheme, Theme, UiState } from './ui-state';
       .used-by, .local, .hide-sm { display: none; }
       .top, main { padding-left: 12px; padding-right: 12px; }
     }
+    @media (max-width: 640px) {
+      .top { gap: 4px; }
+      .name { display: none; }
+      .brand { margin-right: 2px; }
+      .flavor select { max-width: 160px; }
+      .top .btn:not(.icon) { width: 32px; padding: 0; justify-content: center; }
+    }
   `,
 })
 export class Workbench implements OnInit {

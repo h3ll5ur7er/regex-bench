@@ -2,7 +2,7 @@
 export async function compress(text: string): Promise<string> {
   const bytes = new TextEncoder().encode(text);
   if (typeof CompressionStream === 'undefined') return 'p' + toBase64Url(bytes);
-  const stream = new Blob([bytes]).stream().pipeThrough(new CompressionStream('deflate-raw'));
+  const stream = new Response(bytes as BodyInit).body!.pipeThrough(new CompressionStream('deflate-raw'));
   return 'z' + toBase64Url(new Uint8Array(await new Response(stream).arrayBuffer()));
 }
 
@@ -10,7 +10,7 @@ export async function decompress(code: string): Promise<string> {
   const bytes = fromBase64Url(code.slice(1));
   if (code[0] === 'p') return new TextDecoder().decode(bytes);
   if (code[0] !== 'z') throw new Error('unknown encoding');
-  const stream = new Blob([bytes as BlobPart]).stream().pipeThrough(new DecompressionStream('deflate-raw'));
+  const stream = new Response(bytes as BodyInit).body!.pipeThrough(new DecompressionStream('deflate-raw'));
   return new TextDecoder().decode(await new Response(stream).arrayBuffer());
 }
 

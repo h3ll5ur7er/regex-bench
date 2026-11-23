@@ -163,9 +163,9 @@ In-process. No trust boundary. (S/T/R/I/D/E: —)
 | S | — | | — |
 | T | — | | — |
 | R | — | | — |
-| I | App reads files the user didn't choose | Browser: file picker only. Desktop: Tauri `dialog` plugin with no `fs` scope beyond the chosen file | L |
+| I | App reads files the user didn't choose | File picker (or drop) only, in the browser and in the desktop webview alike; the desktop app has no file-system plugin at all | L |
 | D | Binary or huge files | Size limit and UTF-8 decode with replacement characters | L |
-| E | Tauri IPC exposing more commands than needed | Tauri capability file grants only `dialog:open` and `core:default` | L |
+| E | Tauri IPC exposing more commands than needed | No custom commands, no plugins; the capability file grants `core:default` only | L |
 
 ### H18 Workbench UI → SynthesisManager · H19 → InferenceEngine
 
@@ -206,7 +206,7 @@ Same as H05–H08.
 | R | — | | — |
 | I | — | | — |
 | D | — | | — |
-| E | XSS in the webview reaching native commands | Capabilities limited to dialog open; no shell, no fs write; isolation pattern ready | L |
+| E | XSS in the webview reaching native commands | There are no native commands to reach: no plugins, `core:default` only; no shell, no fs | L |
 
 ### H24 CI → GitHub Pages / Releases
 

@@ -90,6 +90,11 @@ import { groupClass, UiState } from './ui-state';
       &:hover { background: var(--surface-2); color: var(--text); }
       &.on { background: var(--accent-soft); color: var(--accent); }
     }
+    @media (max-width: 640px) {
+      .bar { flex-wrap: wrap; padding-left: 10px; }
+      .editor { flex: 1 1 calc(100% - 40px); }
+      .flags { width: 100%; margin: 2px 0 0; padding: 4px 0 0; border-left: 0; border-top: 1px solid var(--border); justify-content: space-between; }
+    }
     .status-row { display: flex; align-items: center; gap: 12px; min-height: 30px; margin-top: 6px; flex-wrap: wrap; }
     .status { display: inline-flex; align-items: center; gap: 7px; font-size: 13px; color: var(--text-2); font-weight: 500; }
     .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--text-3); }
@@ -139,7 +144,7 @@ export class PatternBar {
     if (!this.wb.analysis().valid && this.wb.pattern().flavor !== 'ecmascript') return { kind: 'error', text: 'Fix the pattern to run it', detail: '' };
     if (!r) return { kind: 'running', text: 'Running…', detail: '' };
     const backend = r.backend === 'native' ? "browser's engine" : r.backend === 'rust' ? 'Rust regex (WASM)' : `browser's engine, translated`;
-    const time = r.elapsedMs < 1 ? `${r.elapsedMs.toFixed(2)} ms` : `${r.elapsedMs.toFixed(1)} ms`;
+    const time = r.elapsedMs < 0.05 ? '< 0.1 ms' : r.elapsedMs < 1 ? `${r.elapsedMs.toFixed(2)} ms` : `${r.elapsedMs.toFixed(1)} ms`;
     if (r.status === 'timeout') return { kind: 'timeout', text: 'Stopped: too slow', detail: backend };
     if (r.status === 'error') return { kind: 'error', text: 'The engine rejected the pattern', detail: backend };
     const n = r.matches.length;

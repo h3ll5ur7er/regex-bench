@@ -12,6 +12,7 @@ statuses:
 types:
   - story
   - feature
+  - improvement
   - architecture
   - research
   - bug

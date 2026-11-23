@@ -84,7 +84,9 @@ The rules are those of IDesign, applied to a client-side app:
 
 1. **Clients** call **Managers** only. A client never touches a resource or an engine directly.
 2. **Managers** encapsulate the *sequence* of a use case. They call Engines and ResourceAccess. A manager never
-   calls another manager synchronously; when one use case triggers another, it goes through a signal/event.
+   calls another manager. Where workflows meet (autosave of the workbench session, the synthesis tools working on
+   it), the client wires them: it binds the workbench's session signal into `SynthesisManager.attach()` and
+   passes state to `LibraryManager.autosave()`.
 3. **Engines** encapsulate *activities* (business rules that vary). They may call ResourceAccess, never another
    engine and never a manager. Engines are pure functions where possible, which also makes them easy to run in a
    worker.
@@ -101,7 +103,7 @@ The rules are those of IDesign, applied to a client-side app:
 | Component | Responsibility | Volatility | Code |
 | --- | --- | --- | --- |
 | Workbench UI | Pattern editor, test text editor, result panes (match/replace/list/tests), explanation, diagram, reference. Signals drive all state. | V9 | `web/src/app/ui/` |
-| Desktop Shell | Tauri host that loads the *same* build of the Workbench UI. Adds native file open and a stricter CSP. No business logic. | V6 | `desktop/src-tauri/` |
+| Desktop Shell | Tauri host that loads the *same* build of the Workbench UI from inside the binary. Exposes no commands and loads no plugins (`core:default` only); files open through the webview's own picker. No business logic. | V6 | `desktop/src-tauri/` |
 
 ### Managers
 
@@ -127,9 +129,9 @@ The rules are those of IDesign, applied to a client-side app:
 | Component | Business verbs | Hides | Code |
 | --- | --- | --- | --- |
 | SandboxAccess | `execute(job, budget)` → result or `timeout` | Web Worker lifecycle, termination on budget overrun, WASM instantiation, fallback to the main thread when workers are unavailable | `web/src/app/access/sandbox.access.ts` |
-| WorkspaceAccess | `saveSession`, `loadSession`, `recordHistory`, `listLibrary`, `saveToLibrary` | `localStorage` today, IndexedDB later, format versions and migration | `web/src/app/access/workspace.access.ts` |
+| WorkspaceAccess | `saveSession`, `loadSession`, `recordHistory`, `library`, `saveToLibrary` | `localStorage` today, IndexedDB later, format versions and migration | `web/src/app/access/workspace.access.ts` |
 | ShareAccess | `toLink(session)`, `fromLink(fragment)` | URL fragment format, compression, versioning, validation | `web/src/app/access/share.access.ts` |
-| DiagramAccess | `render(notation)` → SVG | rockuml WASM, its loading and its API | `web/src/app/access/diagram.access.ts` |
+| DiagramAccess | `render(notation)` → SVG | rockuml WASM (through `RockumlRenderer` of `@rockuml/angular`, engine `@rockuml/core`), its loading and its API | `web/src/app/access/diagram.access.ts` |
 | ReferenceAccess | `describe(token, flavor)`, `quickReference(flavor)` | Bundled reference content | `web/src/app/access/reference.access.ts` |
 | HostAccess | `openTextFile`, `copy`, `isDesktop` | Browser File API vs Tauri, clipboard | `web/src/app/access/host.access.ts` |
 
@@ -144,6 +146,26 @@ the app has **no network resource**. The service worker caches the build for off
 Diagnostics (an in-memory log for the "about" panel; nothing is sent anywhere), Settings & Theme, Limits &
 Sanitizer (input size limits, share-link validation, SVG-as-image rendering), Compression (`CompressionStream`
 with a fallback).
+
+## How the managers are wired
+
+```plantuml
+@startuml
+participant "Workbench UI" as UI
+participant WorkbenchManager as WM
+participant SynthesisManager as SM
+participant LibraryManager as LM
+UI -> LM : restore(location.hash)
+LM --> UI : session (link, else last session)
+UI -> WM : load(session)
+UI -> SM : attach(WM.state, WM.analysis)
+note over UI : on every session change (effect)
+UI -> LM : autosave(state), noteStablePattern(state)
+UI -> SM : inferredSession()
+SM --> UI : session with the inferred pattern
+UI -> WM : load(session)
+@enduml
+```
 
 ## Cross-cutting decisions
 

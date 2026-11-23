@@ -1,0 +1,33 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "regex-bench",
+  "version": "0.1.0",
+  "identifier": "io.github.h3ll5ur7er.regexbench",
+  "build": {
+    "frontendDist": "../../web/dist/web/browser",
+    "devUrl": "http://localhost:4200"
+  },
+  "app": {
+    "windows": [
+      {
+        "label": "main",
+        "title": "regex-bench",
+        "width": 1440,
+        "height": 920,
+        "minWidth": 860,
+        "minHeight": 560
+      }
+    ],
+    "security": {
+      "csp": "default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' blob: data:; font-src 'self'; connect-src 'self' ipc: http://ipc.localhost; worker-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'"
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": ["nsis", "msi", "appimage", "deb"],
+    "category": "DeveloperTool",
+    "shortDescription": "Regex workbench that runs on your device",
+    "longDescription": "Test, explain, visualise, debug and convert regular expressions for JavaScript, PCRE, Python, Java, .NET, Rust and Go. Everything runs locally.",
+    "icon": ["icons/32x32.png", "icons/128x128.png", "icons/128x128@2x.png", "icons/icon.png", "icons/icon.ico"]
+  }
+}

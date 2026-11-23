@@ -58,7 +58,8 @@ export class SandboxAccess {
     this.rustModule ??= (async () => {
       try {
         const url = new URL('wasm/regex_core.wasm', document.baseURI);
-        const module = await WebAssembly.compileStreaming(fetch(url));
+        // Streaming compilation needs the application/wasm MIME type; fall back where a host doesn't send it.
+        const module = await WebAssembly.compileStreaming(fetch(url)).catch(async () => WebAssembly.compile(await (await fetch(url)).arrayBuffer()));
         for (const l of this.lanes.values()) l.post({ type: 'init', rustModule: module });
         return module;
       } catch {
