@@ -374,27 +374,70 @@ kbd {
   border-bottom: 2px solid var(--ok);
 }
 
-.cm-tooltip.rb-tooltip {
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  background: var(--surface);
+/* Hover cards. The class sits on CodeMirror's inner tooltip element; the wrapper is themed transparent. */
+.rb-tooltip {
+  border: 1px solid color-mix(in srgb, var(--border-strong) 70%, transparent);
+  border-radius: var(--radius);
+  background: color-mix(in srgb, var(--surface) 80%, transparent);
+  backdrop-filter: blur(16px) saturate(1.6);
+  -webkit-backdrop-filter: blur(16px) saturate(1.6);
   color: var(--text);
   box-shadow: var(--shadow-lg);
-  padding: 8px 10px;
+  padding: 10px 12px;
   font: 12.5px/1.45 var(--font-ui);
-  max-width: 380px;
+  max-width: min(460px, 90vw);
+  max-height: 60vh;
+  overflow: auto;
   .tt-title {
     font-weight: 600;
-    margin-bottom: 2px;
-  }
-  .tt-row {
+    margin-bottom: 6px;
     display: flex;
     gap: 8px;
+    align-items: baseline;
+  }
+  .tt-grid {
+    display: grid;
+    grid-template-columns: auto auto minmax(0, 1fr);
+    gap: 3px 8px;
     align-items: center;
+  }
+  .tt-row {
     font-family: var(--font-code);
     font-size: 12px;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+  .tt-name {
+    color: var(--text-2);
+    font-size: 12px;
+    white-space: nowrap;
+  }
+  .tt-value {
+    font-family: var(--font-code);
+    font-size: 12px;
+    background: var(--gc);
+    border-radius: 4px;
+    padding: 0 5px;
+    justify-self: start;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: pre;
+  }
+  .tt-value.none {
+    background: none;
+    color: var(--text-3);
+    font-family: var(--font-ui);
+    font-style: italic;
   }
   .tt-muted {
     color: var(--text-3);
+    font-weight: 400;
+  }
+}
+
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .rb-tooltip {
+    background: var(--surface);
   }
 }

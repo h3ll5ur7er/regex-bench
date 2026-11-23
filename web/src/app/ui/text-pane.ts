@@ -106,24 +106,26 @@ export class TextPane {
       from: m.start,
       to: m.end,
       render: () => {
+        const el = (tag: string, cls: string, content = '') => {
+          const e = document.createElement(tag);
+          e.className = cls;
+          e.textContent = content;
+          return e;
+        };
         const div = document.createElement('div');
-        const title = document.createElement('div');
-        title.className = 'tt-title';
-        title.textContent = `Match ${idx + 1} · ${m.start}–${m.end}`;
+        const title = el('div', 'tt-title', `Match ${idx + 1}`);
+        title.append(el('span', 'tt-muted', `${m.start}–${m.end}`));
         div.append(title);
+        const grid = el('div', 'tt-grid');
         m.groups.forEach((g, i) => {
-          const row = document.createElement('div');
-          row.className = `tt-row ${groupClass(i + 1)}`;
-          const sw = document.createElement('span');
-          sw.className = 'swatch';
-          const label = document.createElement('span');
-          label.className = 'tt-muted';
-          label.textContent = g?.name ?? r.groupNames[i + 1] ?? `${i + 1}`;
-          const value = document.createElement('span');
-          value.textContent = g ? JSON.stringify(text.slice(g.start, g.end)) : '—';
-          row.append(sw, label, value);
-          div.append(row);
+          const gc = groupClass(i + 1);
+          const name = g?.name ?? r.groupNames[i + 1];
+          grid.append(el('span', `swatch ${gc}`), el('span', 'tt-name', name ? `${i + 1} · ${name}` : `${i + 1}`));
+          const value = g ? text.slice(g.start, g.end) : null;
+          const shown = value === null ? 'did not participate' : value.length > 80 ? value.slice(0, 80) + '…' : value || '(empty)';
+          grid.append(el('span', `tt-value ${gc}${value === null || value === '' ? ' none' : ''}`, shown));
         });
+        if (m.groups.length) div.append(grid);
         return div;
       },
     };
